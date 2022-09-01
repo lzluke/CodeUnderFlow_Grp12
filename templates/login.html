@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Insights</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 1500px}
+
+    /* Set gray background color and 100% height */
+    .sidenav {
+      padding-top: 20px;
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height:auto;}
+    }
+
+    #nav {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      /* width: 200px; */
+      background-color: #f1f1f1;
+    }
+
+    li a {
+      display: block;
+      color: #000;
+      padding: 8px 16px;
+      text-decoration: none;
+    }
+
+    li a.active {
+      background-color: #5DB075;
+      color: white;
+    }
+
+    li a:hover:not(.active) {
+      background-color: #555;
+      color: white;
+    }
+
+    #border{
+      color: whitesmoke;
+      background-color: #5DB075;
+      border-radius: 5px;
+      padding-left: 10px;
+      padding-right: 10px;
+      width: 100%;
+      margin-bottom: 30px;
+    }
+
+    td{
+      padding: 10px;
+    }
+
+    .loginform{
+            text-align: center;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 20em;
+        }
+        legend{
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ url_for('home') }}"><img width=30 height=30 src="../static/images/logo.png"
+                                                                      alt="logo"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li class=""><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if loggedin %}
+                <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-in"></span> Log Out</a></li>
+                {% else %}
+                 <li><a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> Log In</a></li>
+                {% endif %}]
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid text-center">
+    <div class="row content">
+        <div class="col-sm-2 sidenav">
+            <!--            <ul id="nav">-->
+            <!--                <li id="nav"><a class="active" href="{{ url_for('home') }}">Insights</a></li>-->
+            <!--                <li id="nav"><a href="{{ url_for('expenses') }}">Expenses</a></li>-->
+            <!--                <li id="nav"><a href="{{ url_for('floorPlan') }}">Floor Plan</a></li>-->
+            <!--                <li id="nav"><a href="{{ url_for('targets') }}">Targets</a></li>-->
+            <!--            </ul>-->
+        </div>
+
+
+
+        <div class="loginform">
+            <h1>Login to Access</h1>
+            <hr>
+            <form action="" method="POST">
+                {{ form.hidden_tag() }}
+                {{ form.username }}
+                {{ form.password }}
+                {{ form.submit }}
+            </form>
+        </div>
+
+
+    </div>
+</div>
+
+
+<footer class="container-fluid text-center">
+    <p>Code Overflow 2022 T12 &copy;</p>
+</footer>
+
+</body>
+</html>

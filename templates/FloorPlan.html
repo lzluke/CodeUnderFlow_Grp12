@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Floor Plan</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 1500px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      padding-top: 20px;
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height:auto;} 
+    }
+
+    #nav {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      /* width: 200px; */
+      background-color: #f1f1f1;
+    }
+    
+    li a {
+      display: block;
+      color: #000;
+      padding: 8px 16px;
+      text-decoration: none;
+    }
+    
+    li a.active {
+      background-color: #5DB075;
+      color: white;
+    }
+    
+    li a:hover:not(.active) {
+      background-color: #555;
+      color: white;
+    }
+
+    #border{
+      color: whitesmoke;
+      background-color: #5DB075; 
+      border-radius: 5px; 
+      padding-left: 10px;
+      padding-right: 10px;
+      width: 100%;
+      margin-bottom: 30px;
+    }
+
+    td{
+      padding: 10px;
+    }
+    #powerconsumption{
+      font-size: large;
+      border: 1px solid;
+
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+    }
+
+    #powerconsumption td{
+      padding: 20px;
+    }
+
+    #powerconsumption tr:hover{
+      background-color: #5DB075;
+    }
+
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{ url_for('home') }}"><img width=30 height=30 src="../static/images/logo.png" alt="logo"></a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="{{ url_for('home') }}">Home</a></li>
+        <li ><a href="{{ url_for('about') }}">About</a></li>
+        <li><a href="{{ url_for('contact') }}">Contact</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-in"></span> Log Out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  
+<div class="container-fluid text-center">    
+  <div class="row content">
+        <div class="col-sm-2 sidenav">
+            <ul id="nav">
+                <li id="nav"><a  href="{{ url_for('home') }}">Insights</a></li>
+                <li id="nav"><a href="{{ url_for('expenses') }}">Expenses</a></li>
+                <li id="nav"><a class="active" href="{{ url_for('floorPlan') }}">Floor Plan</a></li>
+                <li id="nav"><a href="{{ url_for('targets') }}">Targets</a></li>
+            </ul>
+        </div>
+
+
+    <div class="col-sm-10 text-left"> 
+      <h1>Floor Plan</h1>
+      <p>Take a bird's eye view of your house floor plan and also manage your smart switches</p>
+      <hr>
+      <!-- <h3>Test</h3>
+      <p>Lorem ipsum...</p> -->
+
+      <div class="col-sm-5 text-left">
+        <!-- Image of a mockup floor plan -->
+        <img src="../static/images/FloorPlan.jpeg" alt="Image of house blueprint" style="width:400px;height:400px;">
+        <br><br>
+        <h3 style="text-align: center;">Power Consumption Per Room</h3>
+        <table id="powerconsumption">
+          <tr>
+            <td>Dinning/Kitchen:</td>
+            <td>113 KWh</td>
+          </tr>
+          <tr>
+            <td>Living Room:</td>
+            <td>58 KWh</td>
+          </tr>
+          <tr>
+            <td>Bedroom:</td>
+            <td>190 KWh</td>
+          </tr>
+          <tr>
+            <td>Bath:</td>
+            <td>39 KWh</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="col-sm-5 text-left">
+        <!-- maybe can have filters -->
+        <h1>List of Smart Switches</h1>
+        <div id= "border">
+          <div style="text-align: right;padding: 10px;">
+          </div>
+          <h2>Smart Switch 1</h2>
+
+          <table>
+            <tr>
+              <td>Location:</td>
+              <td>Living Room</td>
+            </tr>
+            <tr>
+              <td>Status:</td>
+              <td>Power ON</td>
+            </tr>
+            <tr>
+              <td>Power Consumption:</td>
+              <td>30 kWh</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><button style="color: black;">Turn Switch Off</button></td>
+            </tr>
+          </table>
+        </div>
+
+        <div id= "border">
+          <div style="text-align: right;padding: 10px;">
+          </div>
+          <h2>Smart Switch 2</h2>
+
+          <table>
+            <tr>
+              <td>Location:</td>
+              <td>Master Bed Room</td>
+            </tr>
+            <tr>
+              <td>Status:</td>
+              <td>Power OFF</td>
+            </tr>
+            <tr>
+              <td>Power Consumption:</td>
+              <td>21 kWh</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><button style="color: black;">Turn Switch On</button></td>
+            </tr>
+          </table>            
+          </div>
+
+          <div id= "border">
+            <div style="text-align: right;padding: 10px;">
+          </div>
+            <h2>Smart Switch 3</h2>
+  
+            <table>
+              <tr>
+                <td>Location:</td>
+                <td>My bedroom</td>
+              </tr>
+              <tr>
+                <td>Status:</td>
+                <td>Power ON</td>
+              </tr>
+              <tr>
+                <td>Power Consumption:</td>
+                <td>28 kWh</td>
+              </tr>
+              <tr>
+                <td></td>
+                <td><button style="color: black;">Turn Switch Off</button></td>
+              </tr>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- <div class="col-sm-2 sidenav">
+      <div class="well">
+        <p>ADS</p>
+      </div>
+      <div class="well">
+        <p>ADS</p>
+      </div>
+    </div> -->
+
+  </div>
+</div>
+
+<footer class="container-fluid text-center">
+  <p>Code Overflow 2022 T12 &copy;</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Floor Plan</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 1500px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      padding-top: 20px;
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height:auto;} 
+    }
+
+    #nav {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      background-color: #f1f1f1;
+    }
+    
+    li a {
+      display: block;
+      color: #000;
+      padding: 8px 15px;
+      text-decoration: none;
+    }
+    
+    li a.active {
+      background-color: #5DB075;
+      color: white;
+    }
+    
+    li a:hover:not(.active) {
+      background-color: #555;
+      color: white;
+    }
+
+    #border{
+      color: whitesmoke;
+      background-color: #a4a5a4; 
+      border-radius: 5px; 
+      padding-left: 10px;
+      padding-right: 10px;
+      width: 100%;
+      margin-bottom: 30px;
+    }
+
+    td{
+      padding: 10px;
+    }
+    #powerconsumption{
+      font-size: large;
+      border: 1px solid;
+
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+    }
+
+    #powerconsumption td{
+      padding: 20px;
+    }
+
+    #powerconsumption tr:hover{
+      background-color: #5DB075;
+    }
+
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{ url_for('home') }}"><img width=30 height=30 src="../static/images/logo.png" alt="logo"></a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="{{ url_for('home') }}">Home</a></li>
+        <li ><a href="{{ url_for('about') }}">About</a></li>
+        <li><a href="{{ url_for('contact') }}">Contact</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-in"></span> Log Out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  
+<div class="container-fluid text-center">    
+  <div class="row content">
+        <div class="col-sm-2 sidenav">
+            <ul id="nav">
+                <li id="nav"><a href="{{ url_for('home') }}">Insights</a></li>
+                <li id="nav"><a href="{{ url_for('expenses') }}">Expenses</a></li>
+                <li id="nav"><a href="{{ url_for('floorPlan') }}">Floor Plan</a></li>
+                <li id="nav"><a class="active" href="{{ url_for('targets') }}">Targets</a></li>
+            </ul>
+        </div>
+
+
+    <div class="col-sm-8 text-left"> 
+       <h1>Targets</h1>
+       <p>Set and manage your target. Find out how you can reach them and be the kings and queens of saving on your electricity bills</p>
+       <hr>
+      
+       
+       <!-- <div class="col-sm-6 text-left"> -->
+        <h2>Have you been reaching your targets?</h2>
+        <br>
+        <table>
+          <tr>
+            <td style="width: 75%;">
+              <canvas id="mixedchart"
+                style="width:100%;max-width:600px;align-items: center; margin-left: auto;margin-right: auto;"></canvas>
+              <script type="text/javascript">
+                const data = {
+                  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                  datasets: [{
+                    type: 'bar',
+                    label: 'Monthly Amount',
+                    data: [275, 226, 345, 151, 128, 245, 372, 175, 162, 274, 312, 125],
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)'
+                  }, {
+                    type: 'line',
+                    label: 'Target Amount',
+                    data: [300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300],
+                    fill: false,
+                    borderColor: 'rgb(54, 162, 235)'
+                  }]
+                };
+
+                const config = {
+                  type: 'bar',
+                  data: data,
+                  options: {
+                    scales: {
+                      y: {
+                        beginAtZero: true
+                      }
+                    }
+                  }
+                };
+
+                const myChart = new Chart(
+                  document.getElementById('mixedchart'),
+                  config
+                );
+              </script>
+            </td>
+            <td style="text-align:center ;">
+              <p style="font-size: 20px;">Current Target: $300/mth </p>
+              <button>Edit Target</button>
+              <br><br>
+              <p style="font-size: 20px;">Months that exceed target: <span style="color: red;">March, July, November</span></p>
+            </td>
+          </tr>
+        </table>
+       
+
+<hr>
+
+      <h2>Take a look at your peers</h2>
+      <br>
+      <canvas id="lineChart" style="width:100%;max-width:600px; margin-left: auto;margin-right: auto;"></canvas>
+
+      <script>
+      var xValues = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov" , "Dec"];
+      
+      new Chart("lineChart", {
+        type: "line",
+        data: {
+          labels: xValues,
+          datasets: [{ 
+            label: 'Li Zheng(You)',
+            data: [275, 226, 345, 151, 128, 245, 372, 175, 162, 274, 312,125],
+            borderColor: "red",
+            fill: false
+          }, { 
+            label: 'Shankari',
+            data: [314, 286, 345, 267, 383, 134, 166, 203, 273, 107, 131,360],
+            borderColor: "green",
+            fill: false
+          }, { 
+            label: 'Olfsen',
+            data: [165, 273, 169, 243, 145, 233, 167, 220, 241, 126, 217,246],
+            borderColor: "blue",
+            fill: false
+          }]
+        },
+        options: {
+          legend: {display: true}
+        }
+      });
+      </script>
+
+      <hr>
+
+      <p style="background-color: #fbd004;text-align:center; font-weight: bolder;">Congratulations you have spent the least on your electricity for the previous months! Keep it up!</p>
+ 
+
+       
+      </div>
+
+      <div class="col-sm-2 sidenav">
+    
+        <h4 style="font-weight: bold;">Check out the following links get some useful tips to start saving on your electricity bills!</h4>
+        <br><br>
+        <a href="https://www.nea.gov.sg/our-services/climate-change-energy-efficiency/energy-efficiency/household-sector/energy-saving-tips">
+          <img src="../static/images/nea-logo.png" alt="nea_logo" width="50%">
+          <p>Six Simple Steps to Save Your Home Electricity Use</p>
+        </a>
+        <br>
+        <a href="https://www.spgroup.com.sg/sp-services/tips-for-consumers">
+          <img src="../static/images/SP_Group_logo.svg.png" alt="SP_Group_logo" width="50%">
+          <p>Tips for Consumers</p>
+        </a>
+        <br>
+        <a href="https://www.psd.gov.sg/challenge/lifestyle/out-of-office/how-to-save-on-your-electricity-bill">
+          <img src="../static/images/PSD-logo.png" alt="PSD-logo" width="50%">
+          <p>How To Save On Your Electricity Bill</p>
+        </a>
+        <br>
+        <a href="https://www.channelnewsasia.com/singapore/tips-save-electricity-higher-energy-costs-electricity-bill-2613816">
+          <img src="../static/images/cna.png" alt="Cna_logo" width="50%">
+          <p>Facing a bigger energy bill? Some tips on how to save electricity and money</p>
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="container-fluid text-center">
+    <p>Footer Text</p>
+  </footer>
+  
+  </body>
+  </html>
+  

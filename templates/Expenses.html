@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Expenses</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 1500px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      padding-top: 20px;
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height:auto;} 
+    }
+
+    #nav {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      /* width: 200px; */
+      background-color: #f1f1f1;
+    }
+    
+    li a {
+      display: block;
+      color: #000;
+      padding: 8px 16px;
+      text-decoration: none;
+    }
+    
+    li a.active {
+      background-color: #5DB075;
+      color: white;
+    }
+    
+    li a:hover:not(.active) {
+      background-color: #555;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{ url_for('home') }}"><img width=30 height=30 src="../static/images/logo.png" alt="logo"></a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="{{ url_for('home') }}">Home</a></li>
+        <li ><a href="{{ url_for('about') }}">About</a></li>
+        <li><a href="{{ url_for('contact') }}">Contact</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-in"></span> Log Out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  
+<div class="container-fluid text-center">    
+ <div class="row content">
+        <div class="col-sm-2 sidenav">
+            <ul id="nav">
+                <li id="nav"><a  href="{{ url_for('home') }}">Insights</a></li>
+                <li id="nav"><a class="active" href="{{ url_for('expenses') }}">Expenses</a></li>
+                <li id="nav"><a href="{{ url_for('floorPlan') }}">Floor Plan</a></li>
+                <li id="nav"><a href="{{ url_for('targets') }}">Targets</a></li>
+            </ul>
+        </div>
+
+
+    <div class="col-sm-10 text-left"> 
+      <h1>Expenses</h1>
+      <p>View your monthly expenses for Electricity.</p>
+      <p>Download your monthly bill (in PDF format) here <a href="../static/documents/MONTHLY BILLS.pdf"><img  width="25" height="25" src="../static/images/download.png" alt=""></a></p>
+      <hr>
+      <h1>Past Statistics</h1>
+      <p>Looking back at 2021, your electrical consumption patterns are:</p>
+      
+      <div class="col-sm-6 text-left"> 
+      <canvas id="myChart" style="width:100%;max-width:600px;align-items: center"></canvas>
+
+        <script>
+        var xValues = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov" , "Dec"];
+        var yValues = [375, 330, 345, 361, 325, 315, 400, 341, 362, 374, 322, 390, 250, 500];
+        var barColors = "green";
+
+        new Chart("myChart", {
+        type: "bar",
+        data: {
+            labels: xValues,
+            datasets: [{
+            backgroundColor: barColors,
+            data: yValues
+            }]
+        },
+        options: {
+            legend: {display: false},
+            title: {
+            display: true,
+            text: "Electricity Expenses for 2021"
+            }
+        }
+        });
+        </script>
+      </div>
+
+      <div class="col-sm-4 text-left"> 
+          <p>Month with the highest expenses: July</p>
+        <label for="months">Select Month to view in details:</label>
+        <select name="months" id="months">
+            <option value="Jan">Jan</option>
+            <option value="Feb">Feb</option>
+            <option value="Mar">Mar</option>
+            <option value="Apr">Apr</option>
+            <option value="May">May</option>
+            <option value="Jun">Jun</option>
+            <option value="Jul">Jul</option>
+            <option value="Aug">Aug</option>
+            <option value="Sep">Sep</option>
+            <option value="Oct">Oct</option>
+            <option value="Nov">Nov</option>
+            <option value="Dec">Dec</option>
+        </select>
+        <button type="submit">View</button>
+
+        <div id="monthDetails"> 
+          <!-- maybe like  -->
+          <canvas id="myChart2" style="width:100%;max-width:600px;align-items: center"></canvas>
+
+        <script>
+        var xValues = ["Fan", "Aircon", "Socket1", "Socket2", "Socket3"];
+        var yValues = [59, 253, 24, 32, 42];
+        var barColors = "#91DEAA";
+
+        new Chart("myChart2", {
+        type: "bar",
+        data: {
+            labels: xValues,
+            datasets: [{
+            backgroundColor: barColors,
+            data: yValues
+            }]
+        },
+        options: {
+            legend: {display: false},
+            title: {
+            display: true,
+            text: "Electricity Expenses for July 2021"
+            }
+        }
+        });
+        </script>
+        <p style="text-align:center; color: red; font-weight: bold;">Comparing with your social circle, you are doing better!</p>
+
+        </div>
+
+      </div>
+    </div>
+<!--    <h3>Last 6 Months</h3>-->
+    <!-- PIE CHART -->
+    <canvas id="Pichart" style="width:100%;max-width:600px"></canvas>
+
+    <script>
+    var xValues = ["Living Room", "Kitchen", "Master Bedroom", "My Bedroom"];
+    var yValues = [90, 120, 70, 150];
+    var barColors = [
+      "#b91d47",
+      "#00aba9",
+      "#2b5797",
+      "#e8c3b9",
+      "#1e7145"
+    ];
+
+    new Chart("Pichart", {
+      type: "pie",
+      data: {
+        labels: xValues,
+        datasets: [{
+          backgroundColor: barColors,
+          data: yValues
+        }]
+      },
+      options: {
+        title: {
+          display: true,
+          text: "Average Consumption per room"
+        }
+      }
+    });
+
+
+    </script>
+
+
+    <!-- <div class="col-sm-2 sidenav">
+      <div class="well">
+        <p>ADS</p>
+      </div>
+      <div class="well">
+        <p>ADS</p>
+      </div>
+    </div> -->
+  </div>
+</div>
+
+<footer class="container-fluid text-center">
+  <p>Code Overflow 2022 T12 &copy;</p>
+</footer>
+
+</body>
+</html>
